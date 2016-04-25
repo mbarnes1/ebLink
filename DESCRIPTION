@@ -1,0 +1,13 @@
+Package: ebLink
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Rebecca C. Steorts
+Maintainer: <beka@stat.duke.edu>
+Depends:
+    R (>= 3.0.1)
+Description: Code that corresponding to Empirically Motivated Bayesian Record
+    Linkage (Bayesian Analysis, 2015)
+License: MIT
+LazyData: TRUE
+RoxygenNote: 5.0.1
