@@ -8,6 +8,6 @@ Depends:
     R (>= 3.0.1)
 Description: Code that corresponding to Empirically Motivated Bayesian Record
     Linkage (Bayesian Analysis, 2015)
-License: MIT
+License: Creative Commons 3.0
 LazyData: TRUE
 RoxygenNote: 5.0.1
