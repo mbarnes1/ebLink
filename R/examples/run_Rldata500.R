@@ -27,3 +27,6 @@ system.time(lam.gs <- rl.gibbs(file.num,X.s,X.c,num.gs=2,a=.01,b=100,c=1,d,M=500
 #system.time(lam.gs <- rl.gibbs(file.num,X.s,X.c,num.gs=10,a=250,b=100,c=1,d))
 # This is for 5
 #system.time(lam.gs <- rl.gibbs(file.num,X.s,X.c,num.gs=10,a=500,b=100,c=1,d))
+
+
+
