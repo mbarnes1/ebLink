@@ -428,21 +428,21 @@ calc_q <- function(jp, X.c.ij, X.s.ij, z.s.ij, z.c.ij) {
 	outputfilename <- paste("lambda-",timestamp,".txt",sep="")
 
 	for(gs.iter in 1:num.gs){
-		print("Drawing beta")
-		print(system.time(beta <- draw.beta(z),gcFirst=FALSE)[3])
-		print("Drawing z")
-		print(system.time(z <- draw.z(Y.s,Y.c,beta,lambda),gcFirst=FALSE)[3])
-		print("Drawing Y.s")
-		print(system.time(Y.s <- draw.Y.s(z,lambda),gcFirst=FALSE)[3])
-		print("Drawing Y.c")
-		print(system.time(Y.c <- draw.Y.c(z,lambda),gcFirst=FALSE)[3])
-		print("Drawing lambda")
-		print(system.time(lambda <- draw.lambda(Y.s,Y.c,z),gcFirst=FALSE)[3])
-		print("Updating lambda history")
-		print(system.time(lambda.out[gs.iter,] <- lambda, gcFirst=FALSE)[3])
+	  print(sprintf("Gibbs sampler iteration %i", gs.iter))
+		print("     Drawing beta")
+		beta <- draw.beta(z)
+		print("     Drawing z")
+		z <- draw.z(Y.s,Y.c,beta,lambda)
+		print("     Drawing Y.s")
+		Y.s <- draw.Y.s(z,lambda)
+		print("     Drawing Y.c")
+		Y.c <- draw.Y.c(z,lambda)
+		print("     Drawing lambda")
+		lambda <- draw.lambda(Y.s,Y.c,z)
+		print("     Updating lambda history")
+		lambda.out[gs.iter,] <- lambda
 		write.table(matrix(lambda,nrow=1),outputfilename,append=TRUE,
 			row.names=FALSE,col.names=FALSE)
-		print(gs.iter)
 		flush.console()
 	}
 
