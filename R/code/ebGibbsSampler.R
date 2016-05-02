@@ -190,7 +190,7 @@ rl.gibbs <- function(file.num=file.num,X.s=X.s,X.c=X.c,num.gs=num.gs,a=a,b=b,c=c
 		  # Different calculations for string fields and categorical fields
 		#print("Calculating pr.1 for strings")
 		#print(system.time(
-		pr.1_string_small <- maply::(ij_by_l_strings[!string_mismatches,], calc_pr.1_string, .expand=FALSE)
+		pr.1_string_small <- maply(ij_by_l_strings[!string_mismatches,], calc_pr.1_string, .expand=FALSE)
 		# ATTN: it's failing here.
 
 		#, gcFirst=FALSE)[3])
@@ -198,7 +198,7 @@ rl.gibbs <- function(file.num=file.num,X.s=X.s,X.c=X.c,num.gs=num.gs,a=a,b=b,c=c
 		pr.1_string[!string_mismatches] <- pr.1_string_small
 		#print("Calculating pr.1 for categoricals")
 		#print(system.time(
-		pr.1_cat_small <- maply::(ij_by_l_cat[!cat_mismatches,], calc_pr.1_cat, .expand=FALSE)
+		pr.1_cat_small <- maply(ij_by_l_cat[!cat_mismatches,], calc_pr.1_cat, .expand=FALSE)
 		#,gcFirst=FALSE)[3])
 		pr.1_cat <- rep(Inf, times=nrow(ij_by_l_cat))
 		pr.1_cat[!cat_mismatches] <- pr.1_cat_small
@@ -206,13 +206,13 @@ rl.gibbs <- function(file.num=file.num,X.s=X.s,X.c=X.c,num.gs=num.gs,a=a,b=b,c=c
 		# Calculate pr.0 for every entry
 		#print("Calculating pr.0 for strings")
 		#print(system.time(
-		pr.0_string_small <- maply::(ij_by_l_strings[!string_mismatches,], calc_pr.0, .expand=FALSE)
+		pr.0_string_small <- maply(ij_by_l_strings[!string_mismatches,], calc_pr.0, .expand=FALSE)
 		#,gcFirst=FALSE)[3])
 		pr.0_string <- rep(0, times=nrow(ij_by_l_strings))
 		pr.0_string[!string_mismatches] <- pr.0_string_small
 		#print("Calculating pr.0 for categoricals")
 		#print(system.time(
-		pr.0_cat_small <- maply::(ij_by_l_cat_offset[!cat_mismatches,], calc_pr.0, .expand=FALSE)
+		pr.0_cat_small <- maply(ij_by_l_cat_offset[!cat_mismatches,], calc_pr.0, .expand=FALSE)
 		#,gcFirst=FALSE)[3])
 		pr.0_cat <- rep(0, times=nrow(ij_by_l_cat_offset))
 		pr.0_cat[!cat_mismatches] <- pr.0_cat_small
@@ -294,7 +294,7 @@ rl.gibbs <- function(file.num=file.num,X.s=X.s,X.c=X.c,num.gs=num.gs,a=a,b=b,c=c
 
 	# Function to draw Y.s
 	draw.Y.s <- function(z,lambda){
-		output <- maply::(jp_by_l_strings, draw.Y.s.jpl, .expand=FALSE)
+		output <- maply(jp_by_l_strings, draw.Y.s.jpl, .expand=FALSE)
 		output <- matrix(output, nrow=M, ncol=p.s)
 		return(output)
 	}
@@ -347,7 +347,7 @@ rl.gibbs <- function(file.num=file.num,X.s=X.s,X.c=X.c,num.gs=num.gs,a=a,b=b,c=c
 
 	# Function to draw Y.c
 	draw.Y.c <- function(z,lambda){
-		output <- matrix(maply::(jp_by_l_cat, draw.Y.c.jp.l, .expand=FALSE),nrow=M, ncol=p.c)
+		output <- matrix(maply(jp_by_l_cat, draw.Y.c.jp.l, .expand=FALSE),nrow=M, ncol=p.c)
 		return(output)
 	}
 

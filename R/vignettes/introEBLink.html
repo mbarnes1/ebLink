@@ -141,8 +141,7 @@ b &lt;-<span class="st"> </span><span class="dv">999</span></code></pre></div>
 <div id="summary-information-of-eblink" class="section level2">
 <h2>Summary information of ebLink</h2>
 <p>Let’s read in the estimate linkage structure using 10 Gibbs iterations.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">estLink &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">read.table</span>(<span class="st">&quot;SampleLinkage.txt&quot;</span>,<span class="dt">header=</span><span class="ot">TRUE</span>))
-estPopSize &lt;-<span class="st"> </span><span class="kw">apply</span>(estLink , <span class="dv">1</span>, function(x) {<span class="kw">length</span>(<span class="kw">unique</span>(x))})
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">estPopSize &lt;-<span class="st"> </span><span class="kw">apply</span>(lam.gs , <span class="dv">1</span>, function(x) {<span class="kw">length</span>(<span class="kw">unique</span>(x))})
 <span class="kw">plot</span>(<span class="kw">density</span>(estPopSize),<span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">500</span>),<span class="dt">main=</span><span class="st">&quot;&quot;</span>,<span class="dt">lty=</span><span class="dv">1</span>, <span class="st">&quot;Observed Population Size&quot;</span>, <span class="dt">ylim=</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))
 <span class="kw">abline</span>(<span class="dt">v=</span><span class="dv">450</span>,<span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
 <span class="kw">abline</span>(<span class="dt">v=</span><span class="kw">mean</span>(estPopSize),<span class="dt">col=</span><span class="st">&quot;black&quot;</span>,<span class="dt">lty=</span><span class="dv">2</span>)
