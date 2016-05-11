@@ -1,5 +1,7 @@
-# Function to draw beta
-conditionals.draw.beta <- function(z){
+conditionals.draw.beta <- function(z, file.num, p){
+  k <- length(unique(file.num))
+  N <- length(file.num)
+  
   output <- matrix(NA,nrow=k,ncol=p)
   draw.beta.i <- function(i) {
     z.sums <- colSums(z[file.num==i,])
