@@ -216,7 +216,7 @@ conditionals.draw.Y.c <- function(z,lambda){
 
 # Should only be called with a latent (jp) which is eligible for being matched to
 # the observed record ij --- see draw.lambda.ij() below
-calc_q <- function(jp, X.c.ij, X.s.ij, z.s.ij, z.c.ij) {
+calc_q <- function(jp, X.c.ij, X.s.ij, z.s.ij, z.c.ij, Y.s, Y.c) {
   Y.s.jp <- drop(Y.s[jp,])
   Y.c.jp <- drop(Y.c[jp,])
   # Probability factor for the distorted strings
@@ -240,11 +240,11 @@ calc_q <- function(jp, X.c.ij, X.s.ij, z.s.ij, z.c.ij) {
 }
 
 
-latent_string_nonmatch <- function(l, X.s.ij) { which(X.s.ij[l] != Y.s[,l]) }
-latent_cat_nonmatch <- function(l, X.c.ij) { which(X.c.ij[l] != Y.c[,l]) }
+latent_string_nonmatch <- function(l, X.s.ij, Y.s) { which(X.s.ij[l] != Y.s[,l]) }
+latent_cat_nonmatch <- function(l, X.c.ij, Y.c) { which(X.c.ij[l] != Y.c[,l]) }
 
 
-draw.lambda.ij <- function(ij) {
+draw.lambda.ij <- function(ij, X.s, X.c, z, Y.s, Y.c) {
   # ATTN: This takes much too long! (13 seconds per Gibbs iteration), key bottleneck
   
   X.s.ij <- drop(X.s[ij,])
@@ -263,9 +263,9 @@ draw.lambda.ij <- function(ij) {
   # only need to consider fields where z[ij,l] ==0
   undistorted_string_fields <- which(z.s.ij == 0)
   undistorted_cat_fields <- which(z.c.ij == 0)
-  impossible_string_latents <- lapply(undistorted_string_fields, latent_string_nonmatch, X.s.ij=X.s.ij)
+  impossible_string_latents <- lapply(undistorted_string_fields, latent_string_nonmatch, X.s.ij=X.s.ij, Y.s=Y.s)
   impossible_string_latents <- unique(do.call("c",impossible_string_latents))
-  impossible_cat_latents <- lapply(undistorted_cat_fields, latent_cat_nonmatch, X.c.ij = X.c.ij)
+  impossible_cat_latents <- lapply(undistorted_cat_fields, latent_cat_nonmatch, X.c.ij = X.c.ij, Y.c=Y.c)
   impossible_cat_latents <- unique(do.call("c",impossible_cat_latents))
   impossible_latents <- union(impossible_string_latents, impossible_cat_latents)
   possible_latents <- setdiff(1:n, impossible_latents)
@@ -273,7 +273,7 @@ draw.lambda.ij <- function(ij) {
   if(length(possible_latents)==1) {
     return(possible_latents)
   } else {
-    q <- sapply(possible_latents, calc_q, X.s.ij=X.s.ij, X.c.ij=X.c.ij, z.s.ij=z.s.ij, z.c.ij=z.c.ij)
+    q <- sapply(possible_latents, calc_q, X.s.ij=X.s.ij, X.c.ij=X.c.ij, z.s.ij=z.s.ij, z.c.ij=z.c.ij, Y.s=Y.s, Y.c=Y.c)
     return(sample(possible_latents,size=1,prob=q))
   }
 }
@@ -281,8 +281,8 @@ draw.lambda.ij <- function(ij) {
 
 
 # Function to draw lambda
-conditionals.draw.lambda <- function(Y.s,Y.c,z){
+conditionals.draw.lambda <- function(Y.s,Y.c,z, X.s, X.c){
   n <- nrow(Y.c)
-  output <- sapply(1:n, draw.lambda.ij)
+  output <- sapply(1:n, draw.lambda.ij, X.s=X.s, X.c=X.c, z=z, Y.s=Y.s, Y.c=Y.c)
   return(output)
 }
