@@ -5,6 +5,16 @@ Author: mbarnes1@cs.cmu.edu
 rm(list=ls())
 setwd('~/Documents/trafficjam/beka/ebLink/R/code/')
 
+compute_errors_wrapper <- function(beta) {
+  result <- tryCatch({
+    errors <- compute_errors(beta)
+    return(errors)
+    }, error = function(e) {
+    return(e)
+    })
+  return(result)
+}
+
 compute_errors <- function(beta) {
   source('model.R')
   source('conditionals.R')
@@ -61,9 +71,9 @@ d <- function(string1,string2){adist(string1,string2)}
   
 # Experiment multiprocessing
 no_cores <- detectCores() - 1
-cl <- makeCluster(min(no_cores, length(betas)))
-clusterExport(cl=cl, varlist=c("n", "thetas", "a", "b", "c", "d"))
-errors = parLapply(cl, betas, compute_errors)
+cl <- makeCluster(min(no_cores, length(betas)), type='FORK')
+errors = parLapply(cl, betas, compute_errors_wrapper)
+print(errors)
 stopCluster(cl)
 
 errors = do.call(rbind, errors)
