@@ -3,7 +3,7 @@ Emperical Validation of Theoretical Lower Bounds
 Author: mbarnes1@cs.cmu.edu
 "
 rm(list=ls())
-setwd('~/Documents/trafficjam/beka/ebLink/R/code/')
+setwd('/home/scratch/mbarnes1/ebLink/R/code/')
 
 compute_errors_wrapper <- function(x) {
   result <- tryCatch({
@@ -55,7 +55,7 @@ compute_errors <- function(param) {
   error_exactsampling <- sum(Lambda != Lambda.exact)/n
   
   # Run experiment (full Gibbs sampler)
-  Lambda.gibbs <- rl.gibbs(file.num=rep(1,n),X.s=X.s,X.c=X.c,num.gs=100,a=a,b=b,c=c,d=d, M=n, num.gs.burnin=100, Y.s.0=Y.s, Y.c.0=Y.c)
+  Lambda.gibbs <- rl.gibbs(file.num=rep(1,n),X.s=X.s,X.c=X.c,num.gs=10000,a=a,b=b,c=c,d=d, M=n, num.gs.burnin=10000, Y.s.0=Y.s, Y.c.0=Y.c)
   error_gibbs <- sum(Lambda != Lambda.gibbs[nrow(Lambda.gibbs),])/n
   errors = c(bound_expected_error, error_exactsampling, error_gibbs)
   return(errors)
@@ -67,11 +67,14 @@ library(parallel)
 # Experiment parameters
 n_params = 3
 n_vec <- seq(from = 20, to = 20, length = n_params)
-betas <- seq(from = 0.1, to = 0.9, length = n_params)
-thetas <- rep(list(list(rep(0.1, 10), rep(0.1, 10), rep(0.1, 10))), n_params)
+betas <- seq(from = 0.6, to = 0.6, length = n_params)
+#thetas <- rep(list(list(rep(0.1, 10), rep(0.1, 10), rep(0.1, 10))), n_params)
+thetas <- vector('list', n_params)
+
 
 params <- vector('list', n_params)
 for (i in 1:n_params) {
+  thetas[[i]] <- rep(list(c((i-1)*0.1, (1-(i-1)*0.1))), 3)
   params[i] <- list(list(betas[i], n_vec[i], thetas[[i]]))
 }
 
