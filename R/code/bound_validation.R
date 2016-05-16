@@ -3,7 +3,7 @@ Emperical Validation of Theoretical Lower Bounds
 Author: mbarnes1@cs.cmu.edu
 "
 rm(list=ls())
-setwd('/home/scratch/mbarnes1/ebLink/R/code/')
+setwd('~/Documents/trafficjam/beka/ebLink/R/code/')
 
 compute_errors_wrapper <- function(x) {
   result <- tryCatch({
@@ -65,9 +65,9 @@ library(parallel)
 
 
 # Experiment parameters
-n_params = 10
-n_vec <- seq(from = 10, to = 1000, length = n_params)
-betas <- seq(from = 0.6, to = 0.6, length = n_params)
+n_params = 3
+n_vec <- seq(from = 20, to = 20, length = n_params)
+betas <- seq(from = 0.1, to = 0.9, length = n_params)
 thetas <- rep(list(list(rep(0.1, 10), rep(0.1, 10), rep(0.1, 10))), n_params)
 
 params <- vector('list', n_params)
@@ -84,7 +84,7 @@ d <- function(string1,string2){adist(string1,string2)}
 # Experiment multiprocessing
 no_cores <- detectCores()
 cl <- makeCluster(min(no_cores, n_params))
-clusterExport(cl, c("a", "b", "c", "d"))
+clusterExport(cl, c("a", "b", "c", "d", "compute_errors"))
 errors = parLapply(cl, params, compute_errors_wrapper)
 print(errors)
 stopCluster(cl)
@@ -104,6 +104,8 @@ print(error_exactsampling)
 print('Gibbs sampling')
 print(error_gibbs)
 
+# Save the results
+save(n_vec, betas, thetas, bound_expected_error, error_exactsampling, error_gibbs, file=paste('results/',paste(format(Sys.time(), "%Y-%m-%d-%H-%M-%S"), "Rdata", sep = "."), sep=''))
 
 # Plot the results
 plot(n_vec, error_exactsampling, type="b", col="red", ylim=c(0, max(max(error_gibbs), max(error_exactsampling))), ann=FALSE, pch=21, lwd=4)
