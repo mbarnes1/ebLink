@@ -3,11 +3,11 @@ Emperical Validation of Theoretical Lower Bounds
 Author: mbarnes1@cs.cmu.edu
 "
 rm(list=ls())
-setwd('~/Documents/trafficjam/beka/ebLink/R/code/')
+setwd('/home/scratch/mbarnes1/ebLink/R/code/')
 
-compute_errors_wrapper <- function(beta) {
+compute_errors_wrapper <- function(x) {
   result <- tryCatch({
-    errors <- compute_errors(beta)
+    errors <- compute_errors(x)
     return(errors)
     }, error = function(e) {
     return(e)
@@ -55,7 +55,7 @@ compute_errors <- function(param) {
   error_exactsampling <- sum(Lambda != Lambda.exact)/n
   
   # Run experiment (full Gibbs sampler)
-  Lambda.gibbs <- rl.gibbs(file.num=rep(1,n),X.s=X.s,X.c=X.c,num.gs=40,a=a,b=b,c=c,d=d, M=n, num.gs.burnin=10, Y.s.0=Y.s, Y.c.0=Y.c)
+  Lambda.gibbs <- rl.gibbs(file.num=rep(1,n),X.s=X.s,X.c=X.c,num.gs=10000,a=a,b=b,c=c,d=d, M=n, num.gs.burnin=10000, Y.s.0=Y.s, Y.c.0=Y.c)
   error_gibbs <- sum(Lambda != Lambda.gibbs[nrow(Lambda.gibbs),])/n
   errors = c(bound_expected_error, error_exactsampling, error_gibbs)
   return(errors)
@@ -65,9 +65,9 @@ library(parallel)
 
 
 # Experiment parameters
-n_params = 3
+n_params = 10
 n_vec <- seq(from = 10, to = 1000, length = n_params)
-betas <- seq(from = 0.5, to = 0.5, length = n_params)
+betas <- seq(from = 0.6, to = 0.6, length = n_params)
 thetas <- rep(list(list(rep(0.1, 10), rep(0.1, 10), rep(0.1, 10))), n_params)
 
 params <- vector('list', n_params)
@@ -85,7 +85,7 @@ d <- function(string1,string2){adist(string1,string2)}
 no_cores <- detectCores()
 cl <- makeCluster(min(no_cores, length(betas)))
 clusterExport(cl, c("a", "b", "c", "d"))
-errors = parLapply(cl, params, compute_errors)
+errors = parLapply(cl, params, compute_errors_wrapper)
 print(errors)
 stopCluster(cl)
 
