@@ -246,7 +246,7 @@ latent_cat_nonmatch <- function(l, X.c.ij, Y.c) { which(X.c.ij[l] != Y.c[,l]) }
 
 draw.lambda.ij <- function(ij, X.s, X.c, z, Y.s, Y.c) {
   # ATTN: This takes much too long! (13 seconds per Gibbs iteration), key bottleneck
-  
+  n <- nrow(Y.c)
   X.s.ij <- drop(X.s[ij,])
   X.c.ij <- drop(X.c[ij,])
   p.s <- dim(X.s)[2]
