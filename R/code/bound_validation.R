@@ -55,7 +55,7 @@ compute_errors <- function(param) {
   error_exactsampling <- sum(Lambda != Lambda.exact)/n
   
   # Run experiment (full Gibbs sampler)
-  Lambda.gibbs <- rl.gibbs(file.num=rep(1,n),X.s=X.s,X.c=X.c,num.gs=10000,a=a,b=b,c=c,d=d, M=n, num.gs.burnin=10000, Y.s.0=Y.s, Y.c.0=Y.c)
+  Lambda.gibbs <- rl.gibbs(file.num=rep(1,n),X.s=X.s,X.c=X.c,num.gs=100,a=a,b=b,c=c,d=d, M=n, num.gs.burnin=100, Y.s.0=Y.s, Y.c.0=Y.c)
   error_gibbs <- sum(Lambda != Lambda.gibbs[nrow(Lambda.gibbs),])/n
   errors = c(bound_expected_error, error_exactsampling, error_gibbs)
   return(errors)
@@ -83,7 +83,7 @@ d <- function(string1,string2){adist(string1,string2)}
   
 # Experiment multiprocessing
 no_cores <- detectCores()
-cl <- makeCluster(min(no_cores, length(betas)))
+cl <- makeCluster(min(no_cores, n_params))
 clusterExport(cl, c("a", "b", "c", "d"))
 errors = parLapply(cl, params, compute_errors_wrapper)
 print(errors)
